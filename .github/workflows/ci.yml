@@ -11,29 +11,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout du code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
+      # 3️⃣ Installer les dépendances
       - name: Install dependencies
         run: npm install
 
+      # 4️⃣ Exécuter les tests
       - name: Run tests
         run: npm test --passWithNoTests
 
+      # 5️⃣ Construire l'image Docker
       - name: Build Docker image
         run: docker build -t ghcr.io/axeltwentyone/devopsss:latest .
 
-      - name: Log in to GitHub Container Registry with PAT
+      # 6️⃣ Login à GitHub Container Registry avec PAT
+      - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: axeltwentyone
+          username: axeltwentyone   # ton username GitHub en minuscules
           password: ${{ secrets.GHCR_PAT }}
 
+      # 7️⃣ Pousser l'image Docker
       - name: Push Docker image
         run: docker push ghcr.io/axeltwentyone/devopsss:latest
